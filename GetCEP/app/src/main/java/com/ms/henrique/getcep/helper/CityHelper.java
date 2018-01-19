@@ -1,5 +1,7 @@
 package com.ms.henrique.getcep.helper;
 
+import android.app.Activity;
+import android.os.Handler;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.View;
@@ -12,6 +14,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -24,12 +28,12 @@ import okhttp3.Response;
  */
 
 public class CityHelper {
-
+   public static cityRepo list  ;
     //
-    public static void fetchCep(String cep)
+    public static void fetchCep(String cep, final Activity act)
     {
 
-        String requestUrl = "https://viacep.com.br/ws/" + cep+"/json/";
+        String requestUrl = "https://viacep.com.br/ws/"+cep+"/json/";
 
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
@@ -51,44 +55,44 @@ public class CityHelper {
 
 
                 final String jsonData = response.body().string();
-                Log.i("getProfileInfo", jsonData);
+                Log.i("city", jsonData);
                 if (response.isSuccessful()) {
-//                    runOnUiThread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                          //  CardView userCard = (CardView) findViewById(R.id.card_user_info);
-//                            try {
-//                                JSONObject rootObj = new JSONObject(jsonData);
-//
-//                                if (rootObj != null) {
-//
-//                                    String logradouro = rootObj.getString("logradouro");
-//                                    String bairro  = rootObj.getString("bairro");
-//                                    String complemento = rootObj.get("complemento").toString();
-//                                    String cep = rootObj.getString("cep");
-//                                    String localidade = rootObj.getString("localidade");
-//                                    String uf =rootObj.getString("uf");
-//                                    String unidade =rootObj.getString("unidade");
-//                                    String ibge =rootObj.getString("ibge");
-//                                    String gia =rootObj.getString("gia");
-//
-//                                    cityRepo cityre = new cityRepo(cep, logradouro ,complemento ,bairro ,localidade ,uf , unidade ,ibge ,gia);
-//                                    //callback.onSuccess(cityre);
-//
-//
-//                                }
-//
-//                            } catch (JSONException e) {
-//
-//
-//                            }
-//                        }
-//                    });
+                   act.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                          ;
+                            try {
+                                JSONObject rootObj = new JSONObject(jsonData);
+
+                                if (rootObj != null) {
+
+                                    String logradouro = rootObj.getString("logradouro");
+                                    String bairro  = rootObj.getString("bairro");
+                                    String complemento = rootObj.get("complemento").toString();
+                                    String cep = rootObj.getString("cep");
+                                    String localidade = rootObj.getString("localidade");
+                                    String uf =rootObj.getString("uf");
+                                    String unidade =rootObj.getString("unidade");
+                                    String ibge =rootObj.getString("ibge");
+                                    String gia =rootObj.getString("gia");
+
+                                    cityRepo cityre = new cityRepo(cep, logradouro ,complemento ,bairro ,localidade ,uf , unidade ,ibge ,gia);
+                                   // return cityre;
+                                    list =  cityre;
+                                    Log.i("cityre", String.valueOf(cityre.getBairro()));
+                                }
+
+                            } catch (JSONException e) {
+
+                                Log.e("bad city", e.getMessage());
+                            }
+                        }
+                    });
                 }
             }
         });
 
     }
 
-    //
+
 }
